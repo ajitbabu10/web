@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <title>Document</title>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+    <!-- Custom Directive -->
+    <custdir></custdir>
+    <button ng-click="push()">Add Fav</button>
+    <button ng-click="remove()">Del Fav</button>
+    <ul ng-repeat="x in class">
+        <li>{{x.id}}</li>
+        <li>{{x.name}}</li>
+    </ul>
+
+    <!--Login Directives -->
+    <login></login>
+    <button ng-click="log()">Login</button>
+    <p>{{result}}</p>
+
+    <!--Filters Order By-->
+    <select ng-model="sort">
+        <option value="">Select</option>
+        <option name="name" value="name">Name</option>
+        <option name="password" value="password">Password</option>
+    </select>
+    <input type="text" ng-model="search">
+    <table border="1">
+        <thead>
+            <th>User</th>
+            <th>Password</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="x in data | filter:search | orderBy:sort:-1">
+                <td>{{x.name}}</td>
+                <td>{{x.password}}</td>
+            </tr>
+        </tbody>
+        
+    </table>
+    <br>
+    <br>
+
+    
+    <!--Arithmetics Factory Service-->
+    <input type="number" ng-model="a">
+    <input type="number" ng-model="b">
+    <button ng-click="calc(a,b)">Calculate</button>
+    {{xx}}
+
+    {{yy}}
+</body>
+
+<script>
+    var app = angular.module('myApp',[])
+    app.controller('myController',function($scope,ser,fact){
+        $scope.class=[];
+        $scope.data=[{name: "zzajit", password:"pass"},{name: "zxzx", password:"ouou"}];
+        $scope.push=function(){
+            var i = {id: $scope.id, name: $scope.name};
+            $scope.class.push(i);
+        }
+        $scope.remove=function(){
+            var i = {id: $scope.id, name: $scope.name};
+            $scope.class.splice(i);
+        }
+        $scope.log=function(){
+            if($scope.user=='ajit' && $scope.password=='pass'){
+                $scope.result='Success';
+            }
+            else{
+                $scope.result='Failed';
+            }
+        }
+        
+
+        $scope.calc=function(a,b){
+            $scope.xx = fact.addt(a,b);
+            $scope.yy = ser.multiply(a,b);
+        }
+    })
+
+    app.service('ser',function(fact){
+        this.addition = function(a,b){
+            return fact.addt(a,b);
+        }
+        this.multiply = function(a,b){
+            return fact.mult(a,b);
+        }
+    })
+    
+    app.factory('fact',function(){
+        var factory={}
+        factory.addt = function(a,b){
+            return a+b;
+        }
+        factory.mult = function(a,b){
+            return a*b;
+        }
+        return factory
+    })
+
+    app.directive("custdir",function(){
+        return{
+            template: 'id<input type="number" ng-model="id">'+
+                    'name<input type="text" ng-model="name">'
+
+        }
+    })
+
+    app.directive("login",function(){
+        return{
+            template: 'User<input type="text" ng-model="user">'+
+                    'Password<input type="password" ng-model="password">'
+
+        }
+    })
+</script>
+</html>
+
+
+
